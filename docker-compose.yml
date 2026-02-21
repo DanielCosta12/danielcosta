@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  site:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: danielcosta-vue
+    container_name: danielcosta-site
+    restart: always
+    networks:
+      - app
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    command: tunnel --no-autoupdate run
+    environment:
+      - TUNNEL_TOKEN=${KEY}
+    restart: always
+    networks:
+      - app
+
+networks:
+  app:
+    driver: bridge
